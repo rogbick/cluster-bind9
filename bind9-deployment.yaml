@@ -1,9 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bind-deployment
-  labels:
-    app: bind
+  name: bind
 spec:
   replicas: 1
   selector:
@@ -14,13 +12,51 @@ spec:
       labels:
         app: bind
     spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
       containers:
       - name: bind
-        image: cytopia/bind
-        env:
-        - name: DOCKER_LOGS
-          value: 1
-        - name: ALLOW_QUERY
-          value: any
+        image: sameersbn/bind:9.16.1-20200524
         ports:
-        - containerPort: "53"
+        - containerPort: 53
+          containerPort: 10000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bind-svc
+spec:
+  type: LoadBalancer
+  ports:
+  - name: udp
+    protocol: UDP
+    port: 53
+    targetPort: 53
+  selector:
+    app: bind
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bind-svc-tcp
+spec:
+  type: LoadBalancer
+  ports:
+  - name: tcp
+    protocol: TCP
+    port: 53
+    targetPort: 53
+  selector:
+    app: bind
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bind-web
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 10000
+    targetPort: 10000
+  selector:
+    app: bind
