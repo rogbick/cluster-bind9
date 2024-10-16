@@ -1,3 +1,14 @@
+apiVersion: v1
+metadata:
+  name: bind-vol
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage:  2Gi
+  storageClassName:  rbd
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,6 +31,13 @@ spec:
         ports:
         - containerPort: 53
           containerPort: 10000
+        volumeMounts:
+        - name: bind-vol
+          mountPath: /mnt
+      volumes:
+      - name: bind-vol
+        persistentVolumeClaim:
+          claimName:  bind-vol
 ---
 apiVersion: v1
 kind: Service
