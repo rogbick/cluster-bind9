@@ -22,7 +22,7 @@ spec:
           containerPort: 10000
         volumeMounts:
         - name: dnsrecords
-          mountPath: /mnt
+          mountPath: /mnt/dnsrecords
       volumes:
       - name: dnsrecords
         persistentVolumeClaim:
