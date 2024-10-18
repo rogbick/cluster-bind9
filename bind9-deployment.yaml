@@ -20,13 +20,6 @@ spec:
         ports:
         - containerPort: 53
           containerPort: 10000
-        volumeMounts:
-        - name: dnsrecords
-          mountPath: /mnt/dnsrecords
-      volumes:
-      - name: dnsrecords
-        persistentVolumeClaim:
-          claimName:  dnsrecords
 ---
 apiVersion: v1
 kind: Service
